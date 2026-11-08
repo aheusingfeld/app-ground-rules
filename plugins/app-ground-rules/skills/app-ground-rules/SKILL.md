@@ -17,7 +17,7 @@ These are the only "must never" rules a project gets for free. Write a project-s
 4. Write secrets, credentials or personal data into logs, telemetry, crash reports or URLs.
 5. Leave the user stuck after a failed request: the input stays usable, the user sees what happened and a way to retry.
 6. Switch account, provider, model or data region silently.
-7. Make cancelling harder than subscribing. In Germany a subscription needs a cancellation button (§ 312k BGB); check the current wording before shipping one.
+7. Make cancelling harder than subscribing. In Germany a subscription needs a cancellation button ([§ 312k BGB](https://www.gesetze-im-internet.de/bgb/__312k.html), read 8 Nov 2026); check the current wording before shipping one.
 
 ## 2. Threat-model baseline
 
