@@ -1,6 +1,6 @@
 ---
 name: app-ground-rules
-description: Alexander's ground rules for every app he builds with agents — behaviour no app may show, the threat-model baseline, the stages explore/beta/release, the revert test for when to ask him, and the estimate rule. Use before planning, specifying, building or reviewing work in any of his app repos, before writing "must never" requirements or a threat model, and before asking him a question.
+description: Alexander's ground rules for every app he builds with agents — behaviour no app may show, the threat-model baseline, the stages explore/beta/release, the revert test for when to ask him, the estimate and budget rule, who merges where, and the ARCHITECTURE.md overview. Use before planning, specifying, building or reviewing work in any of his app repos, before writing "must never" requirements or a threat model, and before asking him a question.
 ---
 
 # App ground rules
@@ -52,7 +52,9 @@ At most 5 questions per round, each with a recommendation. Effort is never a rea
 
 ## 5. Estimate before you build
 
-Every proposal, issue plan and PR states agent time, a token range and Alexander's time (reading, testing, deciding). After merging, add the measured cost next to the estimate, so estimates calibrate on measured data. When a budget runs out, ship what works and list the rest as "not built yet".
+Every proposal, issue plan and PR states agent time, a token range and Alexander's time (reading, testing, deciding). After merging, add the measured cost next to the estimate, so estimates calibrate on measured data.
+
+A budget is what Alexander set: EUR, agent time or tokens. At 80 percent, warn where the work is tracked. At 95 percent, start nothing new: ship what works, list the rest as "not built yet", and stop. Stopping at 95 rather than 100 percent leaves room for the shipping itself, so the budget is not exceeded.
 
 ## 6. Process non-goals
 
@@ -61,4 +63,20 @@ Every proposal, issue plan and PR states agent time, a token range and Alexander
 - No deep test suites, threat models or SLOs before the release stage.
 - No backend contract before a journey in beta calls the backend.
 - No new framework, storage layer or protocol unless the current slice fails without it.
-- No rule repeated in prompts or batch files; link the source instead.
+- No rule repeated in prompts, batch files or a project's own docs; link the source and write down only the project's differences.
+
+## 7. Git flow: who merges where
+
+- Agents branch from `develop` and merge their own PRs into `develop` (rebase merge) once CI is green, there are no conflicts and no merge blocker (section 3) remains. This includes spec and docs PRs, as long as every behaviour clause they add is backed by a decision of Alexander. Proposals go into the issue, not into a merged spec.
+- Only Alexander merges into `main`. Agents open the `develop` → `main` PR for a release and never push or force-push to `main`.
+
+## 8. ARCHITECTURE.md: the current picture
+
+Every app repo has an `ARCHITECTURE.md` at its root, so Alexander can see at any moment what the app consists of right now. It holds:
+
+- the components that exist today, each in one or two plain sentences, with its main source folder;
+- how they interact, as one diagram (Mermaid) plus a short list of the important calls, events and data stores;
+- for each component, the journeys and steps it serves (`JNN`, `JNN.Sn`), linked to the journey files;
+- links to the ADRs that shaped it. Not every decision needs an ADR (section 4 says which do); ARCHITECTURE.md covers the rest.
+
+It describes the current state only, not history or plans. The PR that adds, removes, renames or rewires a component updates it in the same change. A PR that leaves it out of date fails review.
