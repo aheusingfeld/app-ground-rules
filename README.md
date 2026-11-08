@@ -9,4 +9,4 @@ Install in Claude Code:
 /plugin install app-ground-rules@app-ground-rules
 ```
 
-Change the rules only by a PR that Alexander merges.
+Change the rules by a PR into `develop`. They take effect for everyone when Alexander merges `develop` into `main`, because projects link the `main` version.
