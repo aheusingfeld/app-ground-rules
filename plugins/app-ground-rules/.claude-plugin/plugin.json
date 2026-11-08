@@ -1,0 +1,6 @@
+{
+  "name": "app-ground-rules",
+  "description": "Ground rules for every app project: forbidden behaviour, threat-model baseline, stages, revert test, estimates and process non-goals.",
+  "version": "0.1.0",
+  "author": { "name": "Alexander Heusingfeld" }
+}

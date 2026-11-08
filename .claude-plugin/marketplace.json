@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "app-ground-rules",
+  "description": "Alexander's ground rules for every app project: behaviour no app may show, threat-model baseline, and how agents scale rigour, ask questions and estimate.",
+  "owner": { "name": "Alexander Heusingfeld" },
+  "plugins": [
+    {
+      "name": "app-ground-rules",
+      "description": "Ground rules for every app project: forbidden behaviour, threat-model baseline, stages, revert test, estimates and process non-goals.",
+      "source": "./plugins/app-ground-rules",
+      "category": "productivity"
+    }
+  ]
+}
