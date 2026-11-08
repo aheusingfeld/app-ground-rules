@@ -74,7 +74,7 @@ A budget is what Alexander set: EUR, agent time or tokens. At 80 percent, warn w
 
 Every app repo has an `ARCHITECTURE.md` at its root, so Alexander can see at any moment what the app consists of right now. It holds:
 
-- the components that exist today, each in one or two plain sentences, with its main source folder;
+- an overview of the components that exist today (mermaid diagram + table), each in one or two plain sentences, with its main source folder;
 - how they interact, as one diagram (Mermaid) plus a short list of the important calls, events and data stores;
 - for each component, the journeys and steps it serves (`JNN`, `JNN.Sn`), linked to the journey files;
 - links to the ADRs that shaped it. Not every decision needs an ADR (section 4 says which do); ARCHITECTURE.md covers the rest.
