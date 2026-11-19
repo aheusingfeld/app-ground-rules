@@ -35,6 +35,8 @@ Rework is cheaper than specifying. Build a thin slice, put it in front of tester
 | beta | what testers use | the happy path per journey, plus the merge blockers | one runtime event per journey step; one review of the working flow |
 | release | stable journeys | every scenario; contract tests between app and backend | thresholds become SLOs; full UX and security review |
 
+How specs, flows, events and SLOs grow with these stages: the `journey-driven-development` skill.
+
 Merge blockers at every stage: section 1 violated, a failing scenario of the current stage, red CI. Everything else becomes a follow-up issue. A feature earns more tests after it has survived contact with users.
 
 ## 4. Ask only what is hard to undo (revert test)
