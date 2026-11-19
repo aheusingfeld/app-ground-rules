@@ -1,0 +1,9 @@
+# Where the journey-driven-development checkers look. Paths are relative to the repo root.
+journeys_dir = "docs/journeys"
+threat_models_dir = "docs/threat-models"
+
+# Test files that carry scenario IDs in their display names: [folder, glob pattern].
+tests = [
+  ["Tests", "*.swift"],
+  ["test", "*.ts"],
+]
