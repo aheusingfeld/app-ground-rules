@@ -15,3 +15,5 @@ Install in Claude Code:
 ```
 
 Change the rules by a PR into `develop`. They take effect for everyone when Alexander merges `develop` into `main`, because projects link the `main` version.
+
+[MIT](LICENSE) © 2026 Alexander Heusingfeld.
