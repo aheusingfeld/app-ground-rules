@@ -1,6 +1,6 @@
 ---
 name: journey-driven-development
-description: How Alexander's app projects specify, test and monitor behaviour from user journeys — journey specs with SHALL/SHALL NOT requirements and stable scenario IDs, a flow table plus Mermaid diagram per journey, thresholds that become OpenSLO objectives, OpenTelemetry journey events, tests named after scenarios, delta changes after release, and the Goal QA loop with UX and security reviewers. Use when writing or changing a journey spec, flow table, threshold or SLO, naming a test or runtime event, reviewing whether spec and code agree, working a Goal, or setting this process up in a new repo ("set up journey-driven development here").
+description: How app projects specify, test and monitor behaviour from user journeys — journey specs with SHALL/SHALL NOT requirements and stable scenario IDs, a flow table plus Mermaid diagram per journey, thresholds that become OpenSLO objectives, OpenTelemetry journey events, tests named after scenarios, delta changes after release, and the Goal QA loop with UX and security reviewers. Use when writing or changing a journey spec, flow table, threshold or SLO, naming a test or runtime event, reviewing whether spec and code agree, working a Goal, or setting this process up in a new repo ("set up journey-driven development here").
 ---
 
 # Journey-driven development
@@ -14,7 +14,7 @@ Desired, undesired and changing behaviour is described well enough that acceptan
 - The journey spec is the only place where a human describes behaviour. Tests, runtime events, the flow table, SLOs and release analysis are derived from it or checked against it.
 - **The spec wins.** When spec and code disagree, change the code.
 - **Only specified code ships.** Code that serves no specified function is removed with its tests; version control keeps it.
-- **Who may change a spec:** only Alexander decides its content. Agents write into a spec only clauses he decided; every other change, reviewers' included, is a proposal in the issue.
+- **Who may change a spec:** only the owners decide its content. Agents write into a spec only clauses the owners decided; every other change, reviewers' included, is a proposal in the issue.
 
 ## 2. Files
 
@@ -27,7 +27,7 @@ Paths are set in `journeys.toml` at the repo root (template in `templates/journe
 
 ## 3. Writing a journey spec
 
-- **Provenance** after every requirement or scenario that is not obvious: *(Alexander, <date>)*, *(Alexander, Qn)*, *(code)* for behaviour taken from today's code, *(proposal)* for anything not yet decided.
+- **Provenance** after every requirement or scenario that is not obvious: *(decided)*, *(Qn)*, *(code)* for behaviour taken from today's code, *(proposal)* for anything not yet decided.
 - **Desired behaviour:** `### Requirement: JNN.Sn <title>` with one SHALL sentence, then `#### Scenario: <name>` with WHEN / THEN / AND bullets.
 - **Undesired behaviour:** `### Requirement: JNN.Un <title>` with a SHALL NOT sentence and scenarios saying what must never happen and what the user sees instead. Only the sources in section 1 of `app-ground-rules` may add one.
 - IDs are stable and shared by specs, contracts, tests and events. Never reuse a removed ID.
@@ -55,8 +55,8 @@ Paths are set in `journeys.toml` at the repo root (template in `templates/journe
 
 - From the release stage, thresholds become [OpenSLO](https://openslo.com) objectives per step, kept next to the journey or under `slo/`; each names the step ID.
 - An anomaly is a deviation from the desired flow: a transition not in the flow table, a skipped step, a step over its time budget, or any undesired event.
-- Every anomaly is either a defect, which becomes a red test carrying the scenario ID, or a gap in the spec, which becomes a question for Alexander.
-- Build nothing beyond checking events against the flow table without a Goal from Alexander.
+- Every anomaly is either a defect, which becomes a red test carrying the scenario ID, or a gap in the spec, which becomes a question for the owners.
+- Build nothing beyond checking events against the flow table without a Goal from the owners.
 
 ## 7. Releases
 
@@ -74,9 +74,9 @@ The rules apply in every harness (Claude Code, Agent SDK, Codex, OpenCode, Curso
 3. **Red tests** carrying the scenario IDs, the event check included; watch them fail.
 4. **Build** test-driven until green.
 5. **QA loop.** Explore: the smoke test. Beta: the checkers, the affected suites and one combined UX and security review of the working flow; a walkthrough only when the UI changed; a fact check only for new dependencies or third-party behaviour. Release: the checkers, the affected suites, a review by the `ux-designer` and the `security-reviewer` agents (`.claude/agents/`; `scripts/journeys/sync-agents.py` renders copies for Codex and OpenCode), a fact check, a walkthrough of the review build, and measured thresholds. A session that cannot see these agents does not fall back to general-purpose ones: it says so in the issue, pushes the branch, and the reviews run in a session that can.
-6. **Acceptance.** Alexander tests the review artifact. Each defect becomes a red test with its scenario ID; if no scenario fits, extend the spec first.
+6. **Acceptance.** The owners test the review artifact. Each defect becomes a red test with its scenario ID; if no scenario fits, extend the spec first.
 
-**Assumptions.** When a question comes up while building, log question, assumption, reason and impact if wrong in `build/assumptions/<goal>.md` and keep working. At the end apply the revert test of `app-ground-rules` to each: revertible ones go under "Decisions I made" in the PR; only the rest go to Alexander, at most 5 per round, numbered `Qn` (highest existing plus one), each with a recommendation, posted on the Goal's issue and listed in the project's open-questions issue. His answers go into the specs as *(Alexander, Qn)*.
+**Assumptions.** When a question comes up while building, log question, assumption, reason and impact if wrong in `build/assumptions/<goal>.md` and keep working. At the end apply the revert test of `app-ground-rules` to each: revertible ones go under "Decisions I made" in the PR; only the rest go to the owners, at most 5 per round, numbered `Qn` (highest existing plus one), each with a recommendation, posted on the Goal's issue and listed in the project's open-questions issue. Their answers go into the specs as *(Qn)*.
 
 **Long sessions.** Keep `.claude-continue-here.md` current so a new session in any harness can restart from it: at least every 20 minutes of work and before stopping.
 
