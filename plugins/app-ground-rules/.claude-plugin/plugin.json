@@ -1,7 +1,7 @@
 {
   "name": "app-ground-rules",
-  "description": "Ground rules for every app project: forbidden behaviour, threat-model baseline, stages, revert test, estimates and budget, process non-goals, git flow and the ARCHITECTURE.md overview; journey-driven development: journey specs, flow tables, OpenSLO thresholds, OpenTelemetry journey events and the Goal QA loop.",
-  "version": "0.3.0",
+  "description": "Ground rules for every app project: forbidden behaviour, threat-model baseline, stages, revert test, estimates and budget, process non-goals, git flow, the ARCHITECTURE.md overview and required state machines; journey-driven development: journey specs, flow tables, OpenSLO thresholds, OpenTelemetry journey events and the Goal QA loop; a dependency reviewer that checks a diff against the interfaces its goal depends on.",
+  "version": "0.4.0",
   "author": {
     "name": "Alexander Heusingfeld"
   },

@@ -1,15 +1,15 @@
 ---
 name: app-ground-rules
-description: Alexander's ground rules for every app he builds with agents — behaviour no app may show, the threat-model baseline, the stages explore/beta/release, the revert test for when to ask him, the estimate and budget rule, who merges where, and the ARCHITECTURE.md overview. Use before planning, specifying, building or reviewing work in any of his app repos, before writing "must never" requirements or a threat model, and before asking him a question.
+description: Ground rules for every app built with agents — behaviour no app may show, the threat-model baseline, the stages explore/beta/release, the revert test for when to ask the owners, the estimate and budget rule, who merges where, the ARCHITECTURE.md overview, and the state-machine requirement. Use before planning, specifying, building or reviewing work in any app repo that adopts these rules, before writing "must never" requirements or a threat model, and before asking the owners a question.
 ---
 
 # App ground rules
 
-These apply to every app project unless that project's AGENTS.md says otherwise. Order of precedence: Alexander's words in the current chat or issue > the project's AGENTS.md > its charter > its process docs > these ground rules > prompts, batch and restart files. A prompt lists work; it never changes rules.
+These apply to every app project unless that project's AGENTS.md says otherwise. *The owners* are the project's owners group (for a GitHub repo: its admins); documents name groups and roles, never a person. Order of precedence: The owners' words in the current chat or issue > the project's AGENTS.md > its charter > its process docs > these ground rules > prompts, batch and restart files. A prompt lists work; it never changes rules.
 
 ## 1. Behaviour no app may show
 
-These are the only "must never" rules a project gets for free. Write a project-specific one only for a reproduced defect or an explicit decision by Alexander. A reviewer or threat model may propose one; it never adds one.
+These are the only "must never" rules a project gets for free. Write a project-specific one only for a reproduced defect or an explicit decision by the owners. A reviewer or threat model may propose one; it never adds one.
 
 1. Lose user data or a draft. A failed save, crash or update keeps what the user typed.
 2. Send data to a recipient, provider or place the user did not choose.
@@ -41,7 +41,7 @@ Merge blockers at every stage: section 1 violated, a failing scenario of the cur
 
 ## 4. Ask only what is hard to undo (revert test)
 
-Can an agent undo the decision with `git revert` and a rebuild, without touching users, stored data or anyone outside the repo? If yes, decide and list it under "Decisions I made" in the PR. If no, ask Alexander. That covers only:
+Can an agent undo the decision with `git revert` and a rebuild, without touching users, stored data or anyone outside the repo? If yes, decide and list it under "Decisions I made" in the PR. If no, ask the owners. That covers only:
 
 - formats of data already stored;
 - public addresses and IDs: bundle ID, domains, feed URLs, contracts others use;
@@ -54,13 +54,13 @@ At most 5 questions per round, each with a recommendation. Effort is never a rea
 
 ## 5. Estimate before you build
 
-Every proposal, issue plan and PR states agent time, a token range and Alexander's time (reading, testing, deciding). After merging, add the measured cost next to the estimate, so estimates calibrate on measured data.
+Every proposal, issue plan and PR states agent time, a token range and the owners' time (reading, testing, deciding). After merging, add the measured cost next to the estimate, so estimates calibrate on measured data.
 
-A budget is what Alexander set: EUR, agent time or tokens. At 80 percent, warn where the work is tracked. At 95 percent, start nothing new: ship what works, list the rest as "not built yet", and stop. Stopping at 95 rather than 100 percent leaves room for the shipping itself, so the budget is not exceeded.
+A budget is what the owners set: EUR, agent time or tokens. At 80 percent, warn where the work is tracked. At 95 percent, start nothing new: ship what works, list the rest as "not built yet", and stop. Stopping at 95 rather than 100 percent leaves room for the shipping itself, so the budget is not exceeded.
 
 ## 6. Process non-goals
 
-- No requirement that neither Alexander nor a tester asked for. Reviewers propose; they do not add.
+- No requirement that neither the owners nor a tester asked for. Reviewers propose; they do not add.
 - No work beyond the smallest slice testers have not seen yet.
 - No deep test suites, threat models or SLOs before the release stage.
 - No backend contract before a journey in beta calls the backend.
@@ -69,16 +69,28 @@ A budget is what Alexander set: EUR, agent time or tokens. At 80 percent, warn w
 
 ## 7. Git flow: who merges where
 
-- Agents branch from `develop` and merge their own PRs into `develop` (rebase merge) once CI is green, there are no conflicts and no merge blocker (section 3) remains. This includes spec and docs PRs, as long as every behaviour clause they add is backed by a decision of Alexander. Proposals go into the issue, not into a merged spec.
-- Only Alexander merges into `main`. Agents open the `develop` → `main` PR for a release and never push or force-push to `main`.
+- Agents branch from `develop` and merge their own PRs into `develop` (rebase merge) once CI is green, there are no conflicts and no merge blocker (section 3) remains. This includes spec and docs PRs, as long as every behaviour clause they add is backed by a decision of the owners. Proposals go into the issue, not into a merged spec.
+- Only the owners merge into `main`. Agents open the `develop` → `main` PR for a release and never push or force-push to `main`.
 
 ## 8. ARCHITECTURE.md: the current picture
 
-Every app repo has an `ARCHITECTURE.md` at its root, so Alexander can see at any moment what the app consists of right now. It holds:
+Every app repo has an `ARCHITECTURE.md` at its root, so the owners can see at any moment what the app consists of right now. It holds:
 
 - an overview of the components that exist today (mermaid diagram + table), each in one or two plain sentences, with its main source folder;
 - how they interact, as one diagram (Mermaid) plus a short list of the important calls, events and data stores;
 - for each component, the journeys and steps it serves (`JNN`, `JNN.Sn`), linked to the journey files;
+- the state machines of section 9, one Mermaid `stateDiagram-v2` each;
 - links to the ADRs that shaped it. Not every decision needs an ADR (section 4 says which do); ARCHITECTURE.md covers the rest e.g. the base primitives and mental model the agents follow during implementation.
 
 It describes the current state only, not history or plans. The PR that adds, removes, renames or rewires a component updates it in the same change. A PR that leaves it out of date fails review.
+
+## 9. State machines: required, not optional
+
+Every app models each stateful thing explicitly as a state machine: a conversation, a request, a sync, a sign-in, an upload, a background task. This holds at every stage, explore included, and above all for distributed parts: app ↔ worker, app ↔ backend, service ↔ service.
+
+- **Written down.** For each state machine, `ARCHITECTURE.md` holds a Mermaid `stateDiagram-v2`. It names every state, the event that causes each transition, its guard, and the terminal states. The journey's Flow table names the same states.
+- **One place in code.** Transitions go through one function or type per machine. It rejects a transition the diagram does not have, instead of ignoring it. No status flag is set from anywhere else.
+- **Every state has a way out.** Each non-terminal state has an exit for success, for failure and for "nothing happened": a timeout with a stated duration, cancel, or crash recovery. A state the user can get stuck in breaks rule 5 of section 1.
+- **Distributed: both sides, every message.** Each side of a process or network boundary has its own state machine for the interaction. The interface states what each side does on a duplicate, late, out-of-order or missing message, and after a restart of the other side. Messages carry an id, so a retry is idempotent.
+- **Tested from the explore stage on.** From explore on, one test drives the happy path through the machine and asserts that an undefined transition is rejected. From beta on, each boundary has a contract test in which both sides agree on the states and messages. From release on, every transition and every timeout is tested.
+- **Same change.** A PR that adds, removes or renames a state or transition updates the diagram and the Flow table in the same change. Otherwise it fails review. The `dependency-reviewer` skill checks this against the diff.
